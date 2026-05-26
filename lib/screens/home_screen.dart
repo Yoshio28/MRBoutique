@@ -140,6 +140,14 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
+  // ✅ Delegate de grid reutilizable con el ratio corregido
+  static const _gridDelegate = SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 2,
+    mainAxisSpacing: 12,
+    crossAxisSpacing: 12,
+    childAspectRatio: 0.78, // ✅ Antes 0.85 → causaba overflow; ahora hay espacio suficiente
+  );
+
   @override
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
@@ -165,16 +173,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: TextField(
                     controller: _searchController,
-                    style: TextStyle(
-                      color: AppTheme.getTextPrimary(isDark),
-                    ),
+                    style: TextStyle(color: AppTheme.getTextPrimary(isDark)),
                     decoration: InputDecoration(
                       hintText: 'Buscar productos...',
-                      hintStyle: TextStyle(
-                        color: AppTheme.getTextSecondary(isDark),
-                      ),
+                      hintStyle:
+                          TextStyle(color: AppTheme.getTextSecondary(isDark)),
                       border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                      contentPadding:
+                          const EdgeInsets.symmetric(vertical: 12),
                     ),
                   ),
                 ),
@@ -184,90 +190,75 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 24),
 
           // Recientes
-          Text(
-            'Recientes',
-            style: TextStyle(
-              color: AppTheme.getTextPrimary(isDark),
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
-            ),
-          ),
+          _SectionTitle(title: 'Recientes', isDark: isDark),
           const SizedBox(height: 14),
           SizedBox(
             height: 220,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: _recentProducts.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.only(right: 12),
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: SizedBox(
+                  width: 155,
                   child: ProductCard(
                     product: _recentProducts[index],
                     isDark: isDark,
                   ),
-                );
-              },
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 28),
 
           // Populares
-          Text(
-            'Populares',
-            style: TextStyle(
-              color: AppTheme.getTextPrimary(isDark),
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
-            ),
-          ),
+          _SectionTitle(title: 'Populares', isDark: isDark),
           const SizedBox(height: 14),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.85,
-            ),
+            gridDelegate: _gridDelegate,
             itemCount: _popularProducts.length,
-            itemBuilder: (context, index) {
-              return ProductCard(
-                product: _popularProducts[index],
-                isDark: isDark,
-              );
-            },
+            itemBuilder: (context, index) => ProductCard(
+              product: _popularProducts[index],
+              isDark: isDark,
+            ),
           ),
           const SizedBox(height: 28),
 
           // Recomendaciones
-          Text(
-            'Recomendaciones',
-            style: TextStyle(
-              color: AppTheme.getTextPrimary(isDark),
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
-            ),
-          ),
+          _SectionTitle(title: 'Recomendaciones', isDark: isDark),
           const SizedBox(height: 14),
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 0.85,
-            ),
+            gridDelegate: _gridDelegate,
             itemCount: _recommendedProducts.length,
-            itemBuilder: (context, index) {
-              return ProductCard(
-                product: _recommendedProducts[index],
-                isDark: isDark,
-              );
-            },
+            itemBuilder: (context, index) => ProductCard(
+              product: _recommendedProducts[index],
+              isDark: isDark,
+            ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ✅ Widget auxiliar para títulos de sección
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  final bool isDark;
+  const _SectionTitle({required this.title, required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: TextStyle(
+        color: AppTheme.getTextPrimary(isDark),
+        fontWeight: FontWeight.w700,
+        fontSize: 18,
       ),
     );
   }
