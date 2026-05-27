@@ -9,6 +9,7 @@ import '../theme/app_theme.dart';
 import 'wishlist_screen.dart';
 import 'orders_screen.dart';
 import '../screens/auth/login_screen.dart';
+import 'admin/admin_screens_wrapper.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -273,7 +274,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (_, user, __) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ─── Header avatar ──────────────────────────────────────────
+              // ─── Header ────
               Center(
                 child: Column(
                   children: [
@@ -330,7 +331,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 24),
 
-              // ✅ Botón Iniciar sesión — solo si NO hay sesión
               if (!user.isLoggedIn) ...[
                 SizedBox(
                   width: double.infinity,
@@ -355,7 +355,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(height: 28),
               ],
 
-              // ─── Sección: Información personal ─────────────────────────
               _sectionTitle('Información Personal', isDark),
               const SizedBox(height: 12),
               _ProfileOption(
@@ -384,7 +383,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ))),
               const SizedBox(height: 28),
 
-              // ─── Sección: Mis compras ───────────────────────────────────
               _sectionTitle('Mis Compras', isDark),
               const SizedBox(height: 12),
               _ProfileOption(
@@ -404,7 +402,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           builder: (_) => const WishlistScreen()))),
               const SizedBox(height: 28),
 
-              // ─── Sección: Preferencias ──────────────────────────────────
+              _sectionTitle('Administración', isDark),
+              const SizedBox(height: 12),
+              _ProfileOption(
+                  icon: Icons.people_alt_outlined,
+                  label: 'Empleados',
+                  isDark: isDark,
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const EmployeesAdminPage()))),
+              const SizedBox(height: 8),
+              _ProfileOption(
+                  icon: Icons.inventory_2_outlined,
+                  label: 'Gestión de productos',
+                  isDark: isDark,
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const ProductsAdminPage()))),
+              const SizedBox(height: 8),
+              _ProfileOption(
+                  icon: Icons.warehouse_outlined,
+                  label: 'Inventario',
+                  isDark: isDark,
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const InventoryAdminPage()))),
+              const SizedBox(height: 8),
+              _ProfileOption(
+                  icon: Icons.bar_chart_rounded,
+                  label: 'Reportes de ventas',
+                  isDark: isDark,
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const SalesReportAdminPage()))),
+              const SizedBox(height: 28),
+
               _sectionTitle('Preferencias', isDark),
               const SizedBox(height: 12),
               Container(
@@ -428,7 +464,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 28),
 
-              // ✅ Botón cerrar sesión — solo si HAY sesión iniciada
               if (user.isLoggedIn)
                 SizedBox(
                   width: double.infinity,
@@ -500,7 +535,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       );
 }
 
-// ─── Widgets reutilizables ────────────────────────────────────────────────────
+// ─── Widgets reu ───
 
 class _EditField extends StatelessWidget {
   final TextEditingController controller;

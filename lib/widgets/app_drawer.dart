@@ -66,87 +66,89 @@ class AppDrawer extends StatelessWidget {
 
           const Spacer(),
 
-          Container(
-            margin: const EdgeInsets.fromLTRB(16, 0, 16, 28),
-            child: Consumer<UserProvider>(
-              builder: (_, user, __) => GestureDetector(
-                onTap: () async {
-                  Navigator.pop(context);
-                  final confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      backgroundColor: AppTheme.getSurfaceCard(isDark),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      title: Text(
-                        'Cerrar sesión',
-                        style: TextStyle(
-                          color: AppTheme.getTextPrimary(isDark),
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      content: Text(
-                        '¿Estás seguro de que deseas cerrar sesión?',
-                        style: TextStyle(
-                          color: AppTheme.getTextSecondary(isDark),
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, false),
-                          child: Text(
-                            'Cancelar',
-                            style: TextStyle(
-                              color: AppTheme.getTextSecondary(isDark),
+          Consumer<UserProvider>(
+            builder: (_, user, __) => user.isLoggedIn
+                ? Container(
+                    margin: const EdgeInsets.fromLTRB(16, 0, 16, 28),
+                    child: GestureDetector(
+                      onTap: () async {
+                        Navigator.pop(context);
+                        final confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            backgroundColor: AppTheme.getSurfaceCard(isDark),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18),
                             ),
+                            title: Text(
+                              'Cerrar sesión',
+                              style: TextStyle(
+                                color: AppTheme.getTextPrimary(isDark),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            content: Text(
+                              '¿Estás seguro de que deseas cerrar sesión?',
+                              style: TextStyle(
+                                color: AppTheme.getTextSecondary(isDark),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx, false),
+                                child: Text(
+                                  'Cancelar',
+                                  style: TextStyle(
+                                    color: AppTheme.getTextSecondary(isDark),
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx, true),
+                                child: const Text(
+                                  'Cerrar sesión',
+                                  style: TextStyle(
+                                    color: Color(0xFFFCA5A5),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
+                        );
+                        if (confirm == true) {
+                          await user.logout();
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: AppTheme.getSurfaceCard(isDark),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppTheme.getBorder(isDark)),
                         ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(ctx, true),
-                          child: const Text(
-                            'Cerrar sesión',
-                            style: TextStyle(
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.logout_rounded,
                               color: Color(0xFFFCA5A5),
-                              fontWeight: FontWeight.w700,
+                              size: 20,
                             ),
-                          ),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Cerrar sesión',
+                              style: TextStyle(
+                                color: Color(0xFFFCA5A5),
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  );
-                  if (confirm == true) {
-                    await user.logout();
-                  }
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: AppTheme.getSurfaceCard(isDark),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: AppTheme.getBorder(isDark)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(
-                        Icons.logout_rounded,
-                        color: Color(0xFFFCA5A5),
-                        size: 20,
-                      ),
-                      const SizedBox(width: 12),
-                      const Text(
-                        'Cerrar sesión',
-                        style: TextStyle(
-                          color: Color(0xFFFCA5A5),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+                  )
+                : const SizedBox.shrink(),
           ),
         ],
       ),
