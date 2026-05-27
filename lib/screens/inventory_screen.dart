@@ -59,11 +59,13 @@ class InventoryItem {
 
 enum StockStatus { empty, low, ok, overstock }
 
+// ─── Modelo de movimiento ─────────────────────────────────────────────────────
+
 class StockMovement {
   final String itemId;
   final String itemName;
   final int quantity;
-  final bool isEntry;
+  final bool isEntry; // true = entrada, false = salida
   final String reason;
   final String date;
 
@@ -95,7 +97,7 @@ class StockMovement {
       );
 }
 
-// ─── Provider ────
+// ─── Provider ────────────────────────────────────────────────────────────────
 
 class InventoryProvider extends ChangeNotifier {
   static const _kItems = 'inventory_items';
@@ -203,6 +205,8 @@ class InventoryProvider extends ChangeNotifier {
   int get emptyCount =>
       _items.where((i) => i.status == StockStatus.empty).length;
 }
+
+// ─── Pantalla principal ───────────────────────────────────────────────────────
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -605,11 +609,9 @@ class _InventoryScreenState extends State<InventoryScreen>
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
 
-    return ChangeNotifierProvider(
-      create: (_) => InventoryProvider(),
-      child: Consumer<InventoryProvider>(
-        builder: (context, provider, _) {
-          final filtered = _filtered(provider.items);
+    return Consumer<InventoryProvider>(
+      builder: (context, provider, _) {
+        final filtered = _filtered(provider.items);
 
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -1004,12 +1006,11 @@ class _InventoryScreenState extends State<InventoryScreen>
             ),
           );
         },
-      ),
-    );
+      );
   }
 }
 
-// ───inventario ───────────────────────────────────────────────────────
+// ─── Card de inventario ───────────────────────────────────────────────────────
 
 class _InventoryCard extends StatelessWidget {
   final InventoryItem item;
@@ -1175,7 +1176,7 @@ class _InventoryCard extends StatelessWidget {
   }
 }
 
-// ─── estado tarjeta ────────────────────────────────────────────────────────────────
+// ─── Stat card ────────────────────────────────────────────────────────────────
 
 class _StatCard extends StatelessWidget {
   final String label;
@@ -1239,7 +1240,7 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-// ─── Widgets aux ─────
+// ─── Widgets auxiliares ───────────────────────────────────────────────────────
 
 class _Field extends StatelessWidget {
   final TextEditingController controller;

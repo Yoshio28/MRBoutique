@@ -304,11 +304,9 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
 
-    return ChangeNotifierProvider(
-      create: (_) => EmployeesProvider(),
-      child: Consumer<EmployeesProvider>(
-        builder: (context, provider, _) {
-          final list = _filtered(provider.employees);
+    return Consumer<EmployeesProvider>(
+      builder: (context, provider, _) {
+        final list = _filtered(provider.employees);
 
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -507,8 +505,7 @@ class _EmployeesScreenState extends State<EmployeesScreen> {
             ),
           );
         },
-      ),
-    );
+      );
   }
 }
 

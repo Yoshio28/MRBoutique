@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 
-// ─── Modelo ─────
+// ─── Modelo ──────────────────────────────────────────────────────────────────
 
 class Product {
   final String id;
@@ -54,7 +54,7 @@ class Product {
       );
 }
 
-// ─── Provider ────
+// ─── Provider ────────────────────────────────────────────────────────────────
 
 class ProductsAdminProvider extends ChangeNotifier {
   static const _kKey = 'products_admin_list';
@@ -107,7 +107,7 @@ class ProductsAdminProvider extends ChangeNotifier {
   }
 }
 
-// ─── Pantalla ppal
+// ─── Pantalla principal ───────────────────────────────────────────────────────
 
 class ProductsAdminScreen extends StatefulWidget {
   const ProductsAdminScreen({super.key});
@@ -136,7 +136,8 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
       final matchSearch = _search.isEmpty ||
           p.name.toLowerCase().contains(_search.toLowerCase()) ||
           p.sku.toLowerCase().contains(_search.toLowerCase());
-      final matchCat = _filterCat == 'Todas' || p.category == _filterCat;
+      final matchCat =
+          _filterCat == 'Todas' || p.category == _filterCat;
       return matchSearch && matchCat;
     }).toList();
   }
@@ -246,7 +247,8 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                     onPressed: () async {
                       if (nameCtrl.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: const Text('El nombre es obligatorio'),
+                          content:
+                              const Text('El nombre es obligatorio'),
                           backgroundColor: AppTheme.error,
                           behavior: SnackBarBehavior.floating,
                           shape: RoundedRectangleBorder(
@@ -257,7 +259,9 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                       final p = Product(
                         id: isEdit
                             ? product!.id
-                            : DateTime.now().millisecondsSinceEpoch.toString(),
+                            : DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString(),
                         name: nameCtrl.text.trim(),
                         category: selectedCat,
                         price: double.tryParse(priceCtrl.text) ?? 0,
@@ -308,11 +312,9 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().isDarkMode;
 
-    return ChangeNotifierProvider(
-      create: (_) => ProductsAdminProvider(),
-      child: Consumer<ProductsAdminProvider>(
-        builder: (context, provider, _) {
-          final list = _filtered(provider.products);
+    return Consumer<ProductsAdminProvider>(
+      builder: (context, provider, _) {
+        final list = _filtered(provider.products);
 
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -325,12 +327,13 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                     child: Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
                             color: AppTheme.getSurfaceCard(isDark),
                             borderRadius: BorderRadius.circular(14),
-                            border:
-                                Border.all(color: AppTheme.getBorder(isDark)),
+                            border: Border.all(
+                                color: AppTheme.getBorder(isDark)),
                           ),
                           child: Row(
                             children: [
@@ -341,16 +344,20 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                               Expanded(
                                 child: TextField(
                                   style: TextStyle(
-                                      color: AppTheme.getTextPrimary(isDark)),
-                                  onChanged: (v) => setState(() => _search = v),
+                                      color:
+                                          AppTheme.getTextPrimary(isDark)),
+                                  onChanged: (v) =>
+                                      setState(() => _search = v),
                                   decoration: InputDecoration(
-                                    hintText: 'Buscar por nombre o SKU...',
+                                    hintText:
+                                        'Buscar por nombre o SKU...',
                                     hintStyle: TextStyle(
-                                        color:
-                                            AppTheme.getTextSecondary(isDark)),
+                                        color: AppTheme.getTextSecondary(
+                                            isDark)),
                                     border: InputBorder.none,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 12),
+                                    contentPadding:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12),
                                   ),
                                 ),
                               ),
@@ -369,7 +376,8 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                               final cat = _categories[i];
                               final isActive = cat == _filterCat;
                               return GestureDetector(
-                                onTap: () => setState(() => _filterCat = cat),
+                                onTap: () =>
+                                    setState(() => _filterCat = cat),
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 14, vertical: 8),
@@ -377,7 +385,8 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                                     color: isActive
                                         ? AppTheme.accent
                                         : AppTheme.getSurfaceCard(isDark),
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius:
+                                        BorderRadius.circular(20),
                                     border: Border.all(
                                         color: isActive
                                             ? AppTheme.accent
@@ -410,31 +419,35 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                               children: [
                                 Icon(Icons.inventory_2_outlined,
                                     size: 64,
-                                    color: AppTheme.getTextSecondary(isDark)),
+                                    color:
+                                        AppTheme.getTextSecondary(isDark)),
                                 const SizedBox(height: 12),
                                 Text('Sin productos',
                                     style: TextStyle(
-                                        color: AppTheme.getTextPrimary(isDark),
+                                        color:
+                                            AppTheme.getTextPrimary(isDark),
                                         fontWeight: FontWeight.w600,
                                         fontSize: 16)),
                                 const SizedBox(height: 6),
                                 Text('Presiona + para agregar',
                                     style: TextStyle(
-                                        color:
-                                            AppTheme.getTextSecondary(isDark),
+                                        color: AppTheme.getTextSecondary(
+                                            isDark),
                                         fontSize: 13)),
                               ],
                             ),
                           )
                         : ListView.separated(
-                            padding: const EdgeInsets.fromLTRB(20, 4, 20, 100),
+                            padding:
+                                const EdgeInsets.fromLTRB(20, 4, 20, 100),
                             itemCount: list.length,
                             separatorBuilder: (_, __) =>
                                 const SizedBox(height: 10),
                             itemBuilder: (_, i) => _ProductCard(
                               product: list[i],
                               isDark: isDark,
-                              onEdit: () => _openForm(product: list[i]),
+                              onEdit: () =>
+                                  _openForm(product: list[i]),
                               onDelete: () async {
                                 final confirm = await showDialog<bool>(
                                   context: context,
@@ -447,21 +460,24 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                                     title: Text('Eliminar producto',
                                         style: TextStyle(
                                             color:
-                                                AppTheme.getTextPrimary(isDark),
-                                            fontWeight: FontWeight.w700)),
+                                                AppTheme.getTextPrimary(
+                                                    isDark),
+                                            fontWeight:
+                                                FontWeight.w700)),
                                     content: Text(
                                         '¿Deseas eliminar "${list[i].name}"?',
                                         style: TextStyle(
-                                            color: AppTheme.getTextSecondary(
-                                                isDark))),
+                                            color:
+                                                AppTheme.getTextSecondary(
+                                                    isDark))),
                                     actions: [
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(ctx, false),
                                         child: Text('Cancelar',
                                             style: TextStyle(
-                                                color:
-                                                    AppTheme.getTextSecondary(
+                                                color: AppTheme
+                                                    .getTextSecondary(
                                                         isDark))),
                                       ),
                                       TextButton(
@@ -470,13 +486,15 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
                                         child: const Text('Eliminar',
                                             style: TextStyle(
                                                 color: Color(0xFFFCA5A5),
-                                                fontWeight: FontWeight.w700)),
+                                                fontWeight:
+                                                    FontWeight.w700)),
                                       ),
                                     ],
                                   ),
                                 );
                                 if (confirm == true) {
-                                  await provider.deleteProduct(list[i].id);
+                                  await provider
+                                      .deleteProduct(list[i].id);
                                 }
                               },
                             ),
@@ -495,12 +513,11 @@ class _ProductsAdminScreenState extends State<ProductsAdminScreen> {
             ),
           );
         },
-      ),
-    );
+      );
   }
 }
 
-// ─── Card de producto ─────
+// ─── Card de producto ─────────────────────────────────────────────────────────
 
 class _ProductCard extends StatelessWidget {
   final Product product;
@@ -565,7 +582,8 @@ class _ProductCard extends StatelessWidget {
                     if (product.sku.isNotEmpty) ...[
                       Text('  ·  ',
                           style: TextStyle(
-                              color: AppTheme.getTextSecondary(isDark))),
+                              color:
+                                  AppTheme.getTextSecondary(isDark))),
                       Text(product.sku,
                           style: TextStyle(
                               color: AppTheme.getTextSecondary(isDark),
@@ -629,7 +647,8 @@ class _ProductCard extends StatelessWidget {
                       size: 18, color: AppTheme.accent),
                   const SizedBox(width: 8),
                   Text('Editar',
-                      style: TextStyle(color: AppTheme.getTextPrimary(isDark))),
+                      style: TextStyle(
+                          color: AppTheme.getTextPrimary(isDark))),
                 ]),
               ),
               PopupMenuItem(
@@ -650,7 +669,7 @@ class _ProductCard extends StatelessWidget {
   }
 }
 
-// ─── Widgets aux ────
+// ─── Widgets auxiliares ───────────────────────────────────────────────────────
 
 class _Field extends StatelessWidget {
   final TextEditingController controller;
@@ -687,7 +706,8 @@ class _Field extends StatelessWidget {
               style: TextStyle(color: AppTheme.getTextPrimary(isDark)),
               decoration: InputDecoration(
                 hintText: label,
-                hintStyle: TextStyle(color: AppTheme.getTextSecondary(isDark)),
+                hintStyle:
+                    TextStyle(color: AppTheme.getTextSecondary(isDark)),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),

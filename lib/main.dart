@@ -7,6 +7,9 @@ import 'providers/theme_provider.dart';
 import 'providers/cart_provider.dart';
 import 'providers/wishlist_provider.dart';
 import 'providers/orders_provider.dart';
+import 'screens/employees_screen.dart';
+import 'screens/inventory_screen.dart';
+import 'screens/products_admin_screen.dart';
 import 'theme/app_theme.dart';
 import 'main_shell.dart';
 
@@ -31,6 +34,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
         ChangeNotifierProvider(create: (_) => OrdersProvider()),
+        ChangeNotifierProvider(create: (_) => EmployeesProvider()),
+        ChangeNotifierProvider(create: (_) => InventoryProvider()),
+        ChangeNotifierProvider(create: (_) => ProductsAdminProvider()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, _) {
