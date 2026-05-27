@@ -1,6 +1,8 @@
-// lib/screens/auth/forgot_password_screen.dart
+// lib/screens/forgot_password_screen.dart
 import 'package:flutter/material.dart';
-import '../../theme/app_theme.dart';
+import 'package:provider/provider.dart';
+import 'package:mr_boutique/providers/theme_provider.dart';
+import 'package:mr_boutique/theme/app_theme.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -11,8 +13,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _emailCtrl = TextEditingController();
-  bool _loading  = false;
-  bool _sent     = false;
+  bool _loading = false;
+  bool _sent = false;
   String? _error;
 
   @override
@@ -21,49 +23,67 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _send() async {
+  Future<void> _submit() async {
     final email = _emailCtrl.text.trim();
-    if (email.isEmpty || !email.contains('@')) {
-      setState(() => _error = 'Ingresa un correo electrónico válido.');
+
+    if (email.isEmpty) {
+      setState(() => _error = 'Por favor ingresa tu correo electrónico.');
       return;
     }
-    setState(() { _loading = true; _error = null; });
-    await Future.delayed(const Duration(milliseconds: 1200)); // simula red
-    setState(() { _loading = false; _sent = true; });
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+      setState(() => _error = 'Ingresa un correo válido.');
+      return;
+    }
+
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    // Simulación de envío (2 s)
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+    setState(() {
+      _loading = false;
+      _sent = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeProvider>().isDarkMode;
+
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.getBackground(isDark),
       appBar: AppBar(
-        backgroundColor: AppTheme.background,
+        backgroundColor: AppTheme.getSurface(isDark),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_rounded,
-              color: AppTheme.textPrimary, size: 20),
+          icon: Icon(Icons.arrow_back_rounded,
+              color: AppTheme.getTextPrimary(isDark)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('Recuperar contraseña',
-            style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 17,
-                fontWeight: FontWeight.w700)),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(height: 1, color: AppTheme.border),
+        title: Text(
+          'Recuperar contraseña',
+          style: TextStyle(
+            color: AppTheme.getTextPrimary(isDark),
+            fontWeight: FontWeight.w700,
+            fontSize: 20,
+          ),
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 28),
-          child: _sent ? _SuccessView(email: _emailCtrl.text.trim(),
-                onBack: () => Navigator.pop(context))
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(24, 40, 24, 32),
+          child: _sent
+              ? _SuccessView(isDark: isDark)
               : _FormView(
                   emailCtrl: _emailCtrl,
-                  loading: _loading,
                   error: _error,
-                  onSend: _send,
+                  loading: _loading,
+                  isDark: isDark,
+                  onSubmit: _submit,
                 ),
         ),
       ),
@@ -71,17 +91,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 }
 
+// ─── Vista del formulario ────────────────────────────────────────────────────
 class _FormView extends StatelessWidget {
   final TextEditingController emailCtrl;
-  final bool loading;
   final String? error;
-  final VoidCallback onSend;
+  final bool loading;
+  final bool isDark;
+  final VoidCallback onSubmit;
 
   const _FormView({
     required this.emailCtrl,
-    required this.loading,
     required this.error,
-    required this.onSend,
+    required this.loading,
+    required this.isDark,
+    required this.onSubmit,
   });
 
   @override
@@ -89,124 +112,121 @@ class _FormView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 36),
-
-        // Ícono
         Center(
           child: Container(
-            width: 72,
-            height: 72,
+            width: 90,
+            height: 90,
             decoration: BoxDecoration(
-              color: AppTheme.accent.withOpacity(0.1),
+              color: AppTheme.accent.withOpacity(0.12),
               shape: BoxShape.circle,
-              border: Border.all(color: AppTheme.accent.withOpacity(0.25)),
             ),
             child: const Icon(Icons.lock_reset_rounded,
-                color: AppTheme.accent, size: 36),
+                color: AppTheme.accent, size: 46),
           ),
         ),
         const SizedBox(height: 28),
-
-        const Text('¿Olvidaste tu contraseña?',
-            style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 22,
-                fontWeight: FontWeight.w800)),
-        const SizedBox(height: 10),
-        const Text(
-          'Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.',
+        Text(
+          '¿Olvidaste tu contraseña?',
           style: TextStyle(
-              color: AppTheme.textSecondary, fontSize: 14, height: 1.5),
+            color: AppTheme.getTextPrimary(isDark),
+            fontWeight: FontWeight.w800,
+            fontSize: 22,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Ingresa tu correo y te enviaremos un enlace para restablecerla.',
+          style: TextStyle(
+            color: AppTheme.getTextSecondary(isDark),
+            fontSize: 14,
+            height: 1.5,
+          ),
         ),
         const SizedBox(height: 32),
-
-        const Text('Correo electrónico',
-            style: TextStyle(
-                color: AppTheme.textSecondary,
-                fontSize: 12,
-                fontWeight: FontWeight.w600)),
+        Text(
+          'Correo electrónico',
+          style: TextStyle(
+            color: AppTheme.getTextPrimary(isDark),
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: AppTheme.surfaceCard,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppTheme.border),
+            color: AppTheme.getSurfaceCard(isDark),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: AppTheme.getBorder(isDark)),
           ),
-          child: TextField(
-            controller: emailCtrl,
-            keyboardType: TextInputType.emailAddress,
-            style:
-                const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.email_outlined,
+          child: Row(
+            children: [
+              const SizedBox(width: 14),
+              const Icon(Icons.email_outlined,
                   color: AppTheme.accent, size: 20),
-              hintText: 'tu@correo.com',
-              hintStyle:
-                  TextStyle(color: AppTheme.textSecondary, fontSize: 14),
-              border: InputBorder.none,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-            ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: TextField(
+                  controller: emailCtrl,
+                  keyboardType: TextInputType.emailAddress,
+                  style: TextStyle(color: AppTheme.getTextPrimary(isDark)),
+                  decoration: InputDecoration(
+                    hintText: 'tu@correo.com',
+                    hintStyle:
+                        TextStyle(color: AppTheme.getTextSecondary(isDark)),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 14),
+            ],
           ),
         ),
-
+        const SizedBox(height: 16),
         if (error != null) ...[
-          const SizedBox(height: 12),
           Container(
-            width: double.infinity,
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFF7F1D1D).withOpacity(0.15),
+              color: AppTheme.error.withOpacity(0.12),
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                  color: const Color(0xFF7F1D1D).withOpacity(0.4)),
             ),
-            child: Text(error!,
-                style: const TextStyle(
-                    color: Color(0xFFFCA5A5), fontSize: 13)),
+            child: Row(
+              children: [
+                const Icon(Icons.error_outline_rounded,
+                    color: AppTheme.error, size: 18),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(error!,
+                      style:
+                          const TextStyle(color: AppTheme.error, fontSize: 13)),
+                ),
+              ],
+            ),
           ),
+          const SizedBox(height: 16),
         ],
-        const SizedBox(height: 28),
-
         SizedBox(
           width: double.infinity,
-          child: GestureDetector(
-            onTap: loading ? null : onSend,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+          child: ElevatedButton(
+            onPressed: loading ? null : onSubmit,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.accent,
+              foregroundColor: Colors.black,
+              disabledBackgroundColor: AppTheme.accent.withOpacity(0.5),
               padding: const EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                gradient: LinearGradient(
-                  colors: loading
-                      ? [AppTheme.accent.withOpacity(0.5),
-                         AppTheme.accent.withOpacity(0.3)]
-                      : [AppTheme.accent, const Color(0xFF0099CC)],
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.accent.withOpacity(0.3),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Center(
-                child: loading
-                    ? const SizedBox(
-                        width: 22,
-                        height: 22,
-                        child: CircularProgressIndicator(
-                            color: Colors.white, strokeWidth: 2.5),
-                      )
-                    : const Text('Enviar enlace',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16)),
-              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
             ),
+            child: loading
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                        color: Colors.black, strokeWidth: 2))
+                : const Text(
+                    'Enviar enlace',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                  ),
           ),
         ),
       ],
@@ -214,61 +234,62 @@ class _FormView extends StatelessWidget {
   }
 }
 
+// ─── Vista de éxito ──────────────────────────────────────────────────────────
 class _SuccessView extends StatelessWidget {
-  final String email;
-  final VoidCallback onBack;
-  const _SuccessView({required this.email, required this.onBack});
+  final bool isDark;
+  const _SuccessView({required this.isDark});
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: 88,
-          height: 88,
-          decoration: BoxDecoration(
-            color: AppTheme.success.withOpacity(0.1),
-            shape: BoxShape.circle,
-            border:
-                Border.all(color: AppTheme.success.withOpacity(0.3), width: 2),
+        const SizedBox(height: 20),
+        Center(
+          child: Container(
+            width: 90,
+            height: 90,
+            decoration: BoxDecoration(
+              color: AppTheme.success.withOpacity(0.12),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.mark_email_read_rounded,
+                color: AppTheme.success, size: 46),
           ),
-          child: const Icon(Icons.mark_email_read_outlined,
-              color: AppTheme.success, size: 44),
         ),
         const SizedBox(height: 28),
-        const Text('¡Correo enviado!',
-            style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 24,
-                fontWeight: FontWeight.w800)),
-        const SizedBox(height: 12),
         Text(
-          'Revisa tu bandeja de entrada en\n$email\npara restablecer tu contraseña.',
+          '¡Correo enviado!',
+          style: TextStyle(
+            color: AppTheme.getTextPrimary(isDark),
+            fontWeight: FontWeight.w800,
+            fontSize: 22,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          'Revisa tu bandeja de entrada y sigue las instrucciones para restablecer tu contraseña.',
           textAlign: TextAlign.center,
-          style: const TextStyle(
-              color: AppTheme.textSecondary, fontSize: 14, height: 1.6),
+          style: TextStyle(
+            color: AppTheme.getTextSecondary(isDark),
+            fontSize: 14,
+            height: 1.6,
+          ),
         ),
         const SizedBox(height: 36),
         SizedBox(
           width: double.infinity,
-          child: GestureDetector(
-            onTap: onBack,
-            child: Container(
+          child: ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.accent,
+              foregroundColor: Colors.black,
               padding: const EdgeInsets.symmetric(vertical: 15),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                gradient: const LinearGradient(
-                  colors: [AppTheme.accent, Color(0xFF0099CC)],
-                ),
-              ),
-              child: const Center(
-                child: Text('Volver al inicio de sesión',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15)),
-              ),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14)),
+            ),
+            child: const Text(
+              'Volver al inicio de sesión',
+              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
             ),
           ),
         ),

@@ -8,6 +8,7 @@ import '../providers/theme_provider.dart';
 import '../theme/app_theme.dart';
 import 'wishlist_screen.dart';
 import 'orders_screen.dart';
+import '../screens/auth/login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -40,37 +41,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.camera_alt_rounded,
-                  color: AppTheme.accent),
+              leading:
+                  const Icon(Icons.camera_alt_rounded, color: AppTheme.accent),
               title: Text('Tomar foto',
-                  style: TextStyle(
-                      color: AppTheme.getTextPrimary(isDark))),
+                  style: TextStyle(color: AppTheme.getTextPrimary(isDark))),
               onTap: () async {
                 Navigator.pop(ctx);
                 final XFile? photo = await _picker.pickImage(
                     source: ImageSource.camera, imageQuality: 85);
-                if (photo != null && mounted) {
-                  await context
-                      .read<UserProvider>()
-                      .updateAvatar(photo.path);
-                }
+                if (photo != null && mounted)
+                  await context.read<UserProvider>().updateAvatar(photo.path);
               },
             ),
             ListTile(
               leading: const Icon(Icons.photo_library_rounded,
                   color: AppTheme.accent),
               title: Text('Elegir de galería',
-                  style: TextStyle(
-                      color: AppTheme.getTextPrimary(isDark))),
+                  style: TextStyle(color: AppTheme.getTextPrimary(isDark))),
               onTap: () async {
                 Navigator.pop(ctx);
                 final XFile? photo = await _picker.pickImage(
                     source: ImageSource.gallery, imageQuality: 85);
-                if (photo != null && mounted) {
-                  await context
-                      .read<UserProvider>()
-                      .updateAvatar(photo.path);
-                }
+                if (photo != null && mounted)
+                  await context.read<UserProvider>().updateAvatar(photo.path);
               },
             ),
             Consumer<UserProvider>(
@@ -78,9 +71,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ? ListTile(
                       leading: const Icon(Icons.delete_outline_rounded,
                           color: Color(0xFFFCA5A5)),
-                      title: Text('Eliminar foto',
-                          style: TextStyle(
-                              color: Color(0xFFFCA5A5))),
+                      title: const Text('Eliminar foto',
+                          style: TextStyle(color: Color(0xFFFCA5A5))),
                       onTap: () {
                         Navigator.pop(ctx);
                         context.read<UserProvider>().updateAvatar('');
@@ -109,8 +101,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (ctx) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 36),
           child: Column(
@@ -164,15 +155,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                     if (ctx.mounted) Navigator.pop(ctx);
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('Perfil actualizado'),
-                          backgroundColor: AppTheme.success,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                      );
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Perfil actualizado'),
+                        backgroundColor: AppTheme.success,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ));
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -183,8 +172,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(14)),
                   ),
                   child: const Text('Guardar cambios',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 15)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                 ),
               ),
             ],
@@ -206,8 +195,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
       builder: (ctx) => Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(ctx).viewInsets.bottom),
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 20, 24, 36),
           child: Column(
@@ -245,15 +233,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         .updateAddress(addressCtrl.text);
                     if (ctx.mounted) Navigator.pop(ctx);
                     if (mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('Domicilio actualizado'),
-                          backgroundColor: AppTheme.success,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                        ),
-                      );
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Domicilio actualizado'),
+                        backgroundColor: AppTheme.success,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ));
                     }
                   },
                   style: ElevatedButton.styleFrom(
@@ -264,8 +250,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(14)),
                   ),
                   child: const Text('Guardar cambios',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 15)),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 15)),
                 ),
               ),
             ],
@@ -287,12 +273,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (_, user, __) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header con avatar
+              // ─── Header avatar ──────────────────────────────────────────
               Center(
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: _pickImage,
+                      onTap: user.isLoggedIn ? _pickImage : null,
                       child: Stack(
                         children: [
                           Container(
@@ -301,159 +287,129 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             decoration: BoxDecoration(
                               color: AppTheme.getSurfaceCard(isDark),
                               shape: BoxShape.circle,
-                              border: Border.all(
-                                color: AppTheme.accent,
-                                width: 2,
-                              ),
+                              border:
+                                  Border.all(color: AppTheme.accent, width: 2),
                             ),
                             child: user.avatarPath.isNotEmpty
                                 ? ClipOval(
-                                    child: Image.file(
-                                      File(user.avatarPath),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                : Icon(
-                                    Icons.person_rounded,
+                                    child: Image.file(File(user.avatarPath),
+                                        fit: BoxFit.cover))
+                                : Icon(Icons.person_rounded,
                                     size: 50,
-                                    color: AppTheme.getTextSecondary(isDark),
-                                  ),
+                                    color: AppTheme.getTextSecondary(isDark)),
                           ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: const BoxDecoration(
-                                color: AppTheme.accent,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.camera_alt_rounded,
-                                color: Colors.black,
-                                size: 16,
+                          if (user.isLoggedIn)
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(6),
+                                decoration: const BoxDecoration(
+                                    color: AppTheme.accent,
+                                    shape: BoxShape.circle),
+                                child: const Icon(Icons.camera_alt_rounded,
+                                    color: Colors.black, size: 16),
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Text(
-                      user.name,
-                      style: TextStyle(
-                        color: AppTheme.getTextPrimary(isDark),
-                        fontWeight: FontWeight.w800,
-                        fontSize: 20,
-                      ),
-                    ),
+                    Text(user.name,
+                        style: TextStyle(
+                            color: AppTheme.getTextPrimary(isDark),
+                            fontWeight: FontWeight.w800,
+                            fontSize: 20)),
                     const SizedBox(height: 4),
-                    Text(
-                      user.email,
-                      style: TextStyle(
-                        color: AppTheme.getTextSecondary(isDark),
-                        fontSize: 13,
-                      ),
-                    ),
+                    Text(user.email,
+                        style: TextStyle(
+                            color: AppTheme.getTextSecondary(isDark),
+                            fontSize: 13)),
                   ],
                 ),
               ),
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
 
-              // Sección de información
-              Text(
-                'Información Personal',
-                style: TextStyle(
-                  color: AppTheme.getTextPrimary(isDark),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 12),
-              _ProfileOption(
-                icon: Icons.person_outline_rounded,
-                label: 'Editar perfil',
-                isDark: isDark,
-                onTap: _openEditProfile,
-              ),
-              const SizedBox(height: 8),
-              _ProfileOption(
-                icon: Icons.location_on_outlined,
-                label: 'Editar domicilio',
-                isDark: isDark,
-                onTap: _openEditAddress,
-              ),
-              const SizedBox(height: 8),
-              _ProfileOption(
-                icon: Icons.credit_card_outlined,
-                label: 'Métodos de pago',
-                isDark: isDark,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Próximamente disponible'),
-                      backgroundColor: AppTheme.warning,
-                      behavior: SnackBarBehavior.floating,
+              // ✅ Botón Iniciar sesión — solo si NO hay sesión
+              if (!user.isLoggedIn) ...[
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.accent,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                          borderRadius: BorderRadius.circular(12)),
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 28),
-
-              // Sección de compras
-              Text(
-                'Mis Compras',
-                style: TextStyle(
-                  color: AppTheme.getTextPrimary(isDark),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
+                    icon: const Icon(Icons.login_rounded),
+                    label: const Text('Iniciar sesión',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 15)),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 28),
+              ],
+
+              // ─── Sección: Información personal ─────────────────────────
+              _sectionTitle('Información Personal', isDark),
               const SizedBox(height: 12),
               _ProfileOption(
-                icon: Icons.shopping_bag_outlined,
-                label: 'Mis pedidos',
-                isDark: isDark,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const OrdersScreen(),
-                    ),
-                  );
-                },
-              ),
+                  icon: Icons.person_outline_rounded,
+                  label: 'Editar perfil',
+                  isDark: isDark,
+                  onTap: _openEditProfile),
               const SizedBox(height: 8),
               _ProfileOption(
-                icon: Icons.favorite_outline_rounded,
-                label: 'Mi wishlist',
-                isDark: isDark,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const WishlistScreen(),
-                    ),
-                  );
-                },
-              ),
+                  icon: Icons.location_on_outlined,
+                  label: 'Editar domicilio',
+                  isDark: isDark,
+                  onTap: _openEditAddress),
+              const SizedBox(height: 8),
+              _ProfileOption(
+                  icon: Icons.credit_card_outlined,
+                  label: 'Métodos de pago',
+                  isDark: isDark,
+                  onTap: () =>
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Text('Próximamente disponible'),
+                        backgroundColor: AppTheme.warning,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ))),
               const SizedBox(height: 28),
 
-              // Sección de tema
-              Text(
-                'Preferencias',
-                style: TextStyle(
-                  color: AppTheme.getTextPrimary(isDark),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                ),
-              ),
+              // ─── Sección: Mis compras ───────────────────────────────────
+              _sectionTitle('Mis Compras', isDark),
+              const SizedBox(height: 12),
+              _ProfileOption(
+                  icon: Icons.shopping_bag_outlined,
+                  label: 'Mis pedidos',
+                  isDark: isDark,
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const OrdersScreen()))),
+              const SizedBox(height: 8),
+              _ProfileOption(
+                  icon: Icons.favorite_outline_rounded,
+                  label: 'Mi wishlist',
+                  isDark: isDark,
+                  onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => const WishlistScreen()))),
+              const SizedBox(height: 28),
+
+              // ─── Sección: Preferencias ──────────────────────────────────
+              _sectionTitle('Preferencias', isDark),
               const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(
                   color: AppTheme.getSurfaceCard(isDark),
                   borderRadius: BorderRadius.circular(12),
@@ -466,74 +422,85 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           color: AppTheme.getTextPrimary(isDark),
                           fontWeight: FontWeight.w600)),
                   value: isDark,
-                  onChanged: (value) {
-                    context.read<ThemeProvider>().setTheme(value);
-                  },
+                  onChanged: (v) => context.read<ThemeProvider>().setTheme(v),
                   activeColor: AppTheme.accent,
                 ),
               ),
               const SizedBox(height: 28),
 
-              // Botón de cerrar sesión
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    final confirm = await showDialog<bool>(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        backgroundColor: AppTheme.getSurfaceCard(isDark),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(18)),
-                        title: Text('Cerrar sesión',
-                            style: TextStyle(
-                                color: AppTheme.getTextPrimary(isDark),
-                                fontWeight: FontWeight.w700)),
-                        content: Text(
-                            '¿Estás seguro de que deseas cerrar sesión?',
-                            style: TextStyle(
-                                color: AppTheme.getTextSecondary(isDark))),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(ctx, false),
-                            child: Text('Cancelar',
-                                style: TextStyle(
-                                    color: AppTheme.getTextSecondary(isDark))),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(ctx, true),
-                            child: const Text('Cerrar sesión',
-                                style: TextStyle(
-                                    color: Color(0xFFFCA5A5),
-                                    fontWeight: FontWeight.w700)),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirm == true) {
-                      await context.read<UserProvider>().logout();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.error,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+              // ✅ Botón cerrar sesión — solo si HAY sesión iniciada
+              if (user.isLoggedIn)
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          backgroundColor: AppTheme.getSurfaceCard(isDark),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18)),
+                          title: Text('Cerrar sesión',
+                              style: TextStyle(
+                                  color: AppTheme.getTextPrimary(isDark),
+                                  fontWeight: FontWeight.w700)),
+                          content: Text(
+                              '¿Estás seguro de que deseas cerrar sesión?',
+                              style: TextStyle(
+                                  color: AppTheme.getTextSecondary(isDark))),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx, false),
+                              child: Text('Cancelar',
+                                  style: TextStyle(
+                                      color:
+                                          AppTheme.getTextSecondary(isDark))),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.pop(ctx, true),
+                              child: const Text('Cerrar sesión',
+                                  style: TextStyle(
+                                      color: Color(0xFFFCA5A5),
+                                      fontWeight: FontWeight.w700)),
+                            ),
+                          ],
+                        ),
+                      );
+                      if (confirm == true) {
+                        await context.read<UserProvider>().logout();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.error,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                    icon: const Icon(Icons.logout_rounded),
+                    label: const Text('Cerrar sesión',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w700, fontSize: 15)),
                   ),
-                  icon: const Icon(Icons.logout_rounded),
-                  label: const Text('Cerrar sesión',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w700, fontSize: 15)),
                 ),
-              ),
             ],
           ),
         ),
       ),
     );
   }
+
+  Widget _sectionTitle(String text, bool isDark) => Text(
+        text,
+        style: TextStyle(
+          color: AppTheme.getTextPrimary(isDark),
+          fontWeight: FontWeight.w700,
+          fontSize: 16,
+        ),
+      );
 }
+
+// ─── Widgets reutilizables ────────────────────────────────────────────────────
 
 class _EditField extends StatelessWidget {
   final TextEditingController controller;
@@ -570,9 +537,7 @@ class _EditField extends StatelessWidget {
               style: TextStyle(color: AppTheme.getTextPrimary(isDark)),
               decoration: InputDecoration(
                 hintText: label,
-                hintStyle: TextStyle(
-                  color: AppTheme.getTextSecondary(isDark),
-                ),
+                hintStyle: TextStyle(color: AppTheme.getTextSecondary(isDark)),
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
@@ -613,14 +578,11 @@ class _ProfileOption extends StatelessWidget {
             Icon(icon, color: AppTheme.accent, size: 22),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: AppTheme.getTextPrimary(isDark),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                ),
-              ),
+              child: Text(label,
+                  style: TextStyle(
+                      color: AppTheme.getTextPrimary(isDark),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14)),
             ),
             Icon(Icons.arrow_forward_rounded,
                 color: AppTheme.getTextSecondary(isDark), size: 18),
