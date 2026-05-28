@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "777722286062",
+    "project_id": "armrboutique",
+    "storage_bucket": "armrboutique.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777722286062:android:44bbb51aaefca4300c08ff",
+        "android_client_info": {
+          "package_name": "com.example.mr_boutique"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCqoDD-mepxIVrtL1O0uznOg1jwV9-4rI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
